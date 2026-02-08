@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="ko"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="카페24 쇼핑몰관리자 로그인 바로가기!">
+    <meta property="og:title" content="쇼핑몰관리자 로그인 - 카페24">
+    <meta property="og:description" content="카페24 쇼핑몰관리자 로그인 바로가기!">
+    <meta property="og:image" content="//img.echosting.cafe24.com/imgcafe24com/images/common/og_image.png">
+    <meta property="og:type" content="website">
+    <link rel="shortcut icon" href="https://img.echosting.cafe24.com/imgcafe24com/favicon/cafe24.ico">
+    <link rel="apple-touch-icon" href="https://img.echosting.cafe24.com/imgcafe24com/favicon/cafe24.ico">
+    <link rel="preconnect" href="https://img.echosting.cafe24.com">
+    <link rel="preconnect" href="https://m-img.cafe24.com">
+    <link rel="canonical" href="https://eclogin.cafe24.com/Shop/">
+    <title>쇼핑몰관리자 로그인 - 카페24</title>
+    <link rel="stylesheet" type="text/css" href="/css/font/notosans.css" media="all">
+    <link rel="stylesheet" type="text/css" href="//img.echosting.cafe24.com/css/ec/v2/login_v2.1.css" media="all">
+    <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-TW9JR58492&amp;cx=c&amp;gtm=4e6241"></script><script type="text/javascript" async="" src="https://cafe24log.weblog.cafe24.com/weblog.html?uid=cafe24log&amp;udim=1280*720&amp;uref=&amp;url=https://eclogin.cafe24.com/Shop/&amp;uname=%ED%8C%90%EB%A7%A4%EB%AA%B0&amp;t=1770522704153"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PV8T7L3"></script><script type="text/javascript" src="/_scripts/jquery-3.6.1.min.js"></script>
+    <script type="text/javascript" src="/_scripts/ui_desktop.js?22032309"></script>
+    <script type="text/javascript" src="/_scripts/mall_auth.js?24112709"></script>
+    <script type="text/javascript" src="/_scripts/ad_tracking.js?24050811"></script>
+    <script type="text/javascript" src="/_scripts/sns_auth.js?24050911"></script>
+        
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PV8T7L3');
+    </script>
+    <!-- End Google Tag Manager -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PV8T7L3"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    
+    <script type="text/javascript">
+        var correctCaptcha = function(response) {
+        };
+        var onloadCallback = function() {
+            grecaptcha.render('html_element', {
+                'sitekey' : '6LehBQQTAAAAADqgKwu7R9xDHt3FB8VPiZnk0iK-',
+                'callback' : correctCaptcha,
+                'size': 'normal'
+            });
+        };
+        $(function(){
+            $(document).bind("keydown", function(e) {
+                if ((window.event && event.keyCode === 13) || (e.keyCode === 13)) {
+                    form_check();
+                }
+            });
+        });
+        $(function(){
+            $('.ePasswordClick').click(function(){
+                var passwordInput = $(this).parent().find('.typePassword');
+                if ( passwordInput.attr('type') ==="password" ) {
+                    passwordInput.attr('type', 'text');
+                    $(this).removeClass("off").addClass("on");
+                } else {
+                    passwordInput.attr('type', 'password');
+                    $(this).removeClass("on").addClass("off");
+                }
+            })
+        });
+    </script>
+    
+</head>
+<body>
+<!-- 참고: 미지원 브라우저 -->
+<div class="unsupported">
+    <div class="info">
+        <h1>서비스 이용 안내</h1>
+        <p class="desc">쇼핑몰센터 사이트는 <br>Internet explorer 10 이상, Chrome, Safari, Firefox 최신버전에 최적화되어 있습니다. <br>최적화된 브라우저에서 서비스를 이용해 주시기 바랍니다.<br>
+            브라우저 설치하기를 진행하시면 해당 브라우저의 최신버전을 설치하실 수 있습니다.</p>
+        <ul class="browser">
+            <li><img src="//img.echosting.cafe24.com/imgcafe24com/images/common/browser/img_browser_chrome.jpg" alt="Chrome"><a href="https://www.google.com/intl/ko/chrome/browser/desktop/index.html" class="btnLink">설치하기</a></li>
+            <li><img src="//img.echosting.cafe24.com/imgcafe24com/images/common/browser/img_browser_firefox.jpg" alt="Firefox"><a href="https://www.mozilla.org/en-US/firefox/new/" class="btnLink">설치하기</a></li>
+            <li><img src="//img.echosting.cafe24.com/imgcafe24com/images/common/browser/img_browser_IE.jpg" alt="Internet Explorer"><a href="https://support.microsoft.com/ko-kr/help/17621/internet-explorer-downloads" class="btnLink">설치하기</a></li>
+        </ul>
+        <div class="footer">
+            <label class="today">오늘하루열지않음<input type="checkbox" class="check" style=""></label>
+            <button type="button" class="close">닫기</button>
+        </div>
+    </div>
+    <div class="dimmed"></div>
+</div>
+<!-- //참고 -->
+
+<nav id="skipNavigation">
+    <a href="#contents">컨텐츠 바로가기</a>
+</nav>
+
+<div id="wrap">
+    <!-- 참고: 상단 띠배너 -->
+    <div class="banner">
+        <div class="info">
+            <strong class="title">
+                <img src="//img.echosting.cafe24.com/smartAdmin/img/login/ico_logo_ie.png" class="RPI" alt="ie 로고">
+                <img src="//img.echosting.cafe24.com/smartAdmin/img/login/ico_logo_ie_m.png" class="RMI" alt="ie 로고">
+                Internet Explorer 지원 종료
+            </strong>
+            <p class="desc"><span class="RPI">원활한 서비스 이용을 위해</span> <a href="https://support.microsoft.com/ko-kr/microsoft-edge/this-website-works-better-in-microsoft-edge-160fa918-d581-4932-9e4e-1075c4713595" class="txtStressLink" target="_blank" title="새창 열림"><span>최신 버전</span> <em class="icoOutLink"></em></a> 을 이용해주세요.</p>
+        </div>
+        <button type="button" class="btnClose">Close</button><!-- 참고: btnClose 클릭 시 .banner 요소에 active 클래스 제거 -->
+    </div><!-- //참고 -->
+
+    <script type="text/javascript">
+        $(function () {
+            var agent = navigator.userAgent.toLowerCase();
+
+            var obj = $('.banner'),
+                btnClose = obj.find('.btnClose');
+
+            if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
+                obj.addClass('active')
+            }
+    
+            btnClose.on('click', function () {
+                obj.removeClass('active')
+            });
+        }());
+    </script>
+
+    <!-- header -->
+    <header id="header">
+                <h1 class="logo">
+            <a href="https://www.cafe24.com/" title="쇼핑몰센터 바로가기">
+                <img class="cafe24Logo" src="//img.echosting.cafe24.com/imgcafe24com/images/common/cafe24.svg" alt="cafe24">
+                <span class="brand">쇼핑몰센터</span><!-- 서비스명 입력 -->
+            </a>
+        </h1>
+            </header><!-- //header -->
+
+    <div id="container">
+        <!-- contents -->
+        <section id="contents">
+            <div class="section">
+                <div class="mTab eTab themeSolid">
+                    <ul>
+                        <li class="selected"><a href="#" onclick="changeLogin('1');">대표운영자</a></li>
+                        <li><a href="#" onclick="changeLogin('2');">부운영자</a></li>
+                                                <li><a href="#" onclick="changeLogin('3');">공급사</a></li>
+                                            </ul>
+                </div>
+                <form name="frm_user" id="frm_user" action="" method="POST">
+                    <input type="hidden" name="url" id="idUrl" value="" style="">
+                    <input type="hidden" name="login_mode" id="login_mode" value="1" style="">
+                    <input type="hidden" id="mobile" name="mobile" value="F" style="">
+                    <input type="hidden" name="onnode" value="" style="">
+                    <input type="hidden" name="menu" value="" data-param="true" style="">
+                    <input type="hidden" name="submenu" value="" data-param="true" style="">
+                    <input type="hidden" name="mode" value="" style="">
+                    <input type="hidden" name="c_name" value="" style="">
+                    <input type="hidden" name="loan_type" value="" style="">
+                    <input type="hidden" name="addsvc_suburl" value="" style="">
+                    <input type="hidden" name="appID" value="" style="">
+                                        <input type="hidden" name="userid" id="userid" value="" style="">
+                    <input type="hidden" name="EncData" id="idEncData" value="" style="">
+                    <input type="hidden" name="EncKey" id="idEncKey" value="" style="">
+                                    <div class="tabCont" style="display:block;">
+                    <div style="display:block;"><!-- 참고: 2차 인증 display 대응을 위한 div -->
+                        <div class="mFormBox">
+                            <div class="column">
+                                <strong class="title">아이디</strong>
+                                <div class="gridPosition">
+                                    <input type="text" class="fText suffix" placeholder="아이디를 입력해 주세요." title="아이디" name="loginId" id="mall_id" value="" tabindex="1" maxlength="20" style="">
+                                    <span class="txtSuffix">.cafe24.com</span>
+                                </div>
+                            </div>
+                                                        <div class="column">
+                                <span class="title">비밀번호</span>
+                                <div class="gridPosition">
+                                    <input type="password" class="fText typePassword" placeholder="비밀번호를 입력해 주세요." title="비밀번호" name="loginPasswd" id="userpasswd" tabindex="3" maxlength="20" style="">
+                                    <button type="button" class="btnView ePasswordClick off">현시하다</button>
+                                </div>
+                            </div>
+                            <p id="normal_msg" class="message txtWarn typeLeft" style="display:none;">F</p><!-- 참고: 오류 -->
+                        </div>
+                    </div>
+                    <div class="mButton">
+                        <button type="button" class="btnStrong large" tabindex="4" onclick="form_check();">로그인</button>
+                    </div>
+                                        <div class="mUtility">
+                        <span class="gLeft"><span clas="RPB">아직 회원이 아니신가요? &nbsp;</span><a href="https://user.cafe24.com/kr/join/ec/?action=joinForm" class="txtEmLink" target="_blank">회원가입</a></span>
+                        <span class="gRight">
+                                <a href="https://user.cafe24.com/user/echosting/idsearch/" class="txtLink" target="_blank">아이디/비밀번호 찾기</a>
+                            </span>
+                    </div>
+                                        <div class="mSnsJoin">
+                        <div class="title">
+                            <strong class="txt">또는 SNS 계정으로 시작하기</strong>
+                        </div>
+                        <div class="cont">
+                            <div class="googleLogin" id="googleLogin">
+                                <a href="javascript:sns_check('google');" class="google eAlert">Google 계정으로 로그인</a>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="error_msg" class="message txtWarn typeLeft error" style="margin:16px 0;display:none;">아이디 또는 비밀번호를 확인해주세요.</p><!-- 참고: SNS 로그인 오류 -->                    
+                                                                            </div>
+                </form>
+                                <form id="snsFrm" action="https://user.cafe24.com/sns/?action=snsLogin" target="auth_popup" method="POST">
+                    <input type="hidden" name="snsService" id="snsService" value="EC" style="">
+                    <input type="hidden" name="snsType" id="snsType" value="" style="">
+                    <input type="hidden" name="snsReturnUrl" id="snsReturnUrl" value="https://eclogin.cafe24.com/Shop/?url=authSns" style="">
+                </form>
+                                <div class="mAd">
+                                                                            <div class="eDisplayadvertise" data-inventoryid="INV-AD-240409000001" data-invtype="S_S" data-contentid="CON-AD-260202112454">
+                        <a href="https://mktstory.cafe24.com/2bdda210-9377-802e-a90a-f6ce13921a31" target="_blank"><img class="track-visibility" src="https://cafe24img.poxo.com/file.cafe24cos.com/display-advertise/260202/1769998991782_e61f40a3-f230-4d87-834f-9ea603bfc124.png" alt="https://mktstory.cafe24.com/2bdda210-9377-802e-a90a-f6ce13921a31" loading="lazy"></a>
+                    </div>
+                                                                                <div class="eDisplayadvertise" data-inventoryid="INV-AD-240409000002" data-invtype="S_S" data-contentid="CON-AD-251203120906">
+                        <a href="https://www.cafe24.com/commerce/service/cafe24pro.html?utm_source=cafe24mk?utm_medium=banner?utm_campaign=adminloginbottom" target="_blank"><img class="track-visibility" src="https://cafe24img.poxo.com/file.cafe24cos.com/display-advertise/251203/1764730516880_4a809fcf-14f7-4099-bd1c-ae326782733e.png" alt="https://www.cafe24.com/commerce/service/cafe24pro.html?utm_source=cafe24mk?utm_medium=banner?utm_campaign=adminloginbottom" loading="lazy"></a>
+                    </div>
+                                                                        </div>
+            </div>
+        </section><!-- contents -->
+    </div>
+    <!-- footer -->
+    <footer id="footer">
+        <p class="copyright">Copyright © Cafe24 Corp. All Rights Reserved.</p>
+    </footer><!-- //footer -->
+</div>
+
+<!-- 리포트2.0 로그분석코드 시작 -->
+<script type="text/javascript">
+    var JsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+    var uname = escape('판매몰');
+    document.write(unescape("%3Cscript id='log_script' src='" + JsHost + "cafe24log.weblog.cafe24.com/weblog.js?uid=cafe24log&uname="+uname+"' type='text/javascript'%3E%3C/script%3E"));
+</script><script id="log_script" src="https://cafe24log.weblog.cafe24.com/weblog.js?uid=cafe24log&amp;uname=판매몰" type="text/javascript"></script>
+<!-- 리포트2.0  로그분석코드 완료 -->
+
+</body></html>

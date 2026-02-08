@@ -102,7 +102,6 @@ def login_coupang(page) -> None:
         raise RuntimeError("로그인 폼/버튼을 찾지 못했습니다. debug/coupang_login_form_not_found.* 확인")
 
     # ✅ 로그인 제출 후: 긴 대기 대신 "짧은 대기 + 메인 셀렉터 확인"으로 넘기는 게 빠름
-    # (로그인 성공 후 어떤 페이지로 가든, 다음 단계에서 필요한 요소를 기다리면 됨)
     wait_quick(page, int(os.getenv("POST_LOGIN_WAIT_MS", "250")))
 
 
@@ -256,7 +255,25 @@ def main():
             login_coupang(page)
 
             open_sales_url_with_retry(page, url, retries=1)
-            excel_path = download_product_excel_via_dropdown(page, download_dir="downloads")
+
+            # ============================
+            # ✅ 요청 반영(딱 이 부분만 변경)
+            # - 엑셀 다운로드 실패 시: sales url 다시 로드 후 1회 재시도
+            # ============================
+            try:
+                excel_path = download_product_excel_via_dropdown(page, download_dir="downloads")
+            except Exception as e1:
+                # 1) 페이지를 다시 로드
+                wait_quick(page, 150)
+                open_sales_url_with_retry(page, url, retries=1)
+
+                # 2) 엑셀 다운로드 1회 재시도
+                try:
+                    excel_path = download_product_excel_via_dropdown(page, download_dir="downloads")
+                except Exception as e2:
+                    # 원인을 stderr에 남기기 좋게 메시지 합쳐서 올림
+                    raise RuntimeError(f"엑셀 다운로드 재시도까지 실패: first={e1} / second={e2}") from e2
+            # ============================
 
             product_agg, total_sales, total_qty = aggregate_from_excel(excel_path)
             brand_agg = aggregate_by_brand(product_agg)

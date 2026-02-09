@@ -119,7 +119,7 @@ def get_access_token(client_id: str, client_secret: str, force_refresh: bool = F
 
 
 # ---------------------------
-# Orders API (yesterday sales)
+# Orders API
 # ---------------------------
 def http_get_json(url: str, headers: dict, params: dict) -> dict:
     r = requests.get(url, headers=headers, params=params, timeout=30)
@@ -185,6 +185,18 @@ def safe_int(v) -> int:
     return 0
 
 
+def is_cancel_status(status: Optional[str]) -> bool:
+    """
+    취소 계열만 제외:
+    - 상태명에 'CANCEL'이 들어가면 취소로 간주(가장 안전)
+    - 혹시 모를 변형 대비하여 'CANCELED/CANCELLED/CANCEL_REQUEST...' 등 포괄
+    """
+    if not status:
+        return False
+    s = str(status).upper()
+    return "CANCEL" in s
+
+
 # ---------------------------
 # Public API (for runner)
 # ---------------------------
@@ -210,8 +222,8 @@ def get_daily_metrics(target_date: datetime.date, force_token: bool = False, raw
 
     from_iso, to_iso = kst_day_range(target_date)
 
-    # 매출 확인 목적이면 PAYED 중심이면 충분 + 일부 상태 포함
-    statuses = ["PAYED", "DELIVERED", "PURCHASE_DECIDED"]
+    # ✅ 변경 1) 상태 필터 제거: 오늘 범위에 해당하는 주문을 전부 가져옴
+    statuses: list[str] = []
 
     access_token = get_access_token(client_id, client_secret, force_refresh=force_token)
 
@@ -219,7 +231,7 @@ def get_daily_metrics(target_date: datetime.date, force_token: bool = False, raw
     product_order_count = 0
     status_counter = Counter()
 
-    # ✅ 매출 정의: initialProductAmount - initialProductDiscountAmount
+    # ✅ 매출 정의: initialProductAmount - initialProductDiscountAmount (기존 유지)
     sales_amount = 0
 
     sample_printed = 0
@@ -229,13 +241,19 @@ def get_daily_metrics(target_date: datetime.date, force_token: bool = False, raw
         order = content.get("order") or {}
         product_order = content.get("productOrder") or {}
 
+        status = product_order.get("productOrderStatus")
+
+        # ✅ 변경 2) 취소만 제외하고 합산
+        if is_cancel_status(status):
+            status_counter[str(status)] += 1  # 취소도 카운트는 남겨서 확인 가능
+            continue
+
+        if status:
+            status_counter[str(status)] += 1
+
         order_id = order.get("orderId")
         if order_id:
             order_ids.add(str(order_id))
-
-        status = product_order.get("productOrderStatus")
-        if status:
-            status_counter[str(status)] += 1
 
         initial_product_amount = safe_int(product_order.get("initialProductAmount"))
         initial_product_discount_amount = safe_int(product_order.get("initialProductDiscountAmount"))
@@ -253,8 +271,8 @@ def get_daily_metrics(target_date: datetime.date, force_token: bool = False, raw
         "source": "naver",
         "date": target_date.strftime("%Y-%m-%d"),
         "sales": int(sales_amount),
-        "orders": int(len(order_ids)),  # ✅ 시트 구매수는 유니크 orderId 기준이 가장 자연스러움
-        "product_order_count": int(product_order_count),
+        "orders": int(len(order_ids)),  # ✅ 구매수는 유니크 orderId 기준
+        "product_order_count": int(product_order_count),  # ✅ 취소 제외된 라인아이템 수
         "status_counter": dict(status_counter) if status_counter else {},
         "from": from_iso,
         "to": to_iso,
@@ -283,19 +301,17 @@ def main():
     result = get_daily_metrics(target_date=target_date, force_token=args.force_token, raw=args.raw)
 
     if args.json:
-        # ✅ runner가 파싱하기 쉬운 형태: 마지막 줄 JSON 1줄
         print(json.dumps(result, ensure_ascii=False))
         return
 
-    # 사람이 보기 좋은 출력(기존 출력 유지하면서도 정보 정리)
     print("\n==============================")
     print(f"날짜(KST): {result['date']}")
     print(f"조회범위:  {result['from']}  ~  {result['to']}")
-    print(f"구매수(유니크 orderId): {result['orders']:,}")
-    print(f"상품주문건수(라인아이템): {result['product_order_count']:,}")
-    print(f"매출(상품가-상품할인, KRW): {result['sales']:,}")
+    print(f"구매수(유니크 orderId, 취소 제외): {result['orders']:,}")
+    print(f"상품주문건수(라인아이템, 취소 제외): {result['product_order_count']:,}")
+    print(f"매출(상품가-상품할인, 취소 제외, KRW): {result['sales']:,}")
     if result.get("status_counter"):
-        print(f"상태별 건수: {result['status_counter']}")
+        print(f"상태별 건수(취소 포함 카운트): {result['status_counter']}")
     print("==============================\n")
 
 

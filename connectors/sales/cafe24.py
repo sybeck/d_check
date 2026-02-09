@@ -119,7 +119,7 @@ def scrape_cell_3_3_text(page, profile: str) -> str:
     # role 기반 우선
     try:
         row3 = grid.get_by_role("row").nth(2)
-        cell = row3.get_by_role("cell").nth(2)
+        cell = row3.get_by_role("cell").nth(2)  # 3행 3열
         text = normalize_text(cell.inner_text())
         if text:
             return text
@@ -128,7 +128,31 @@ def scrape_cell_3_3_text(page, profile: str) -> str:
 
     # table 기반 fallback
     row3 = grid.locator("tr").nth(2)
-    cell = row3.locator("td,th").nth(2)
+    cell = row3.locator("td,th").nth(2)  # 3행 3열
+    text = normalize_text(cell.inner_text())
+    return text
+
+
+def scrape_cell_3_4_text(page, profile: str) -> str:
+    """3행 4열(환불 칸) 텍스트 크롤링"""
+    grid_selector = must_env_profile(profile, "GRID_SELECTOR")
+
+    page.wait_for_selector(grid_selector, timeout=30_000)
+    grid = page.locator(grid_selector).first
+
+    # role 기반 우선
+    try:
+        row3 = grid.get_by_role("row").nth(2)
+        cell = row3.get_by_role("cell").nth(3)  # 3행 4열
+        text = normalize_text(cell.inner_text())
+        if text:
+            return text
+    except Exception:
+        pass
+
+    # table 기반 fallback
+    row3 = grid.locator("tr").nth(2)
+    cell = row3.locator("td,th").nth(3)  # 3행 4열
     text = normalize_text(cell.inner_text())
     return text
 
@@ -188,8 +212,16 @@ def get_daily_metrics(profile: str, target_date=None) -> dict:
                 with open(f"debug/{profile}_after_login.html", "w", encoding="utf-8") as f:
                     f.write(page.content())
 
+            # 3행 3열: 매출/구매수
             raw = scrape_cell_3_3_text(page, profile=profile)
             sales, orders = parse_sales_and_orders(raw)
+
+            # 3행 4열: 환불금액/환불건수 (차감)
+            refund_raw = scrape_cell_3_4_text(page, profile=profile)
+            refund_amount, refund_count = parse_sales_and_orders(refund_raw)
+
+            sales = sales - refund_amount
+            orders = orders - refund_count
 
             return {
                 "status": "ok",

@@ -149,17 +149,18 @@ def build_slack_summary(
     roas = _safe_div(total_sales, meta_spend)
     cpa = _safe_div(meta_spend, total_orders)
 
-    roas_txt = f"{roas:.2f}x" if roas is not None else "N/A"
+    roas_txt = f"{roas:.2f}" if roas is not None else "N/A"
     cpa_txt = _fmt_krw(int(cpa)) if cpa is not None else "N/A"
 
     return (
-        f"📌 {brand_label} 어제 성과({date_str})\n"
+        f"📌 {brand_label} 어제 성과 ({date_str})\n"
         f"(자사몰, 쿠팡, 네이버, 메타 광고비만 조회한 수치임)\n"
         f"• 매출: {_fmt_krw(total_sales)}\n"
         f"• 구매수: {_fmt_int(total_orders)}건\n"
-        f"• 메타 광고비: {_fmt_krw(meta_spend)}\n"
         f"• ROAS: {roas_txt}\n"
         f"• CPA: {cpa_txt}"
+        f"• 메타 광고비: {_fmt_krw(meta_spend)}\n"
+
     )
 
 

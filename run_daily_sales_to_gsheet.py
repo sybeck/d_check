@@ -12,6 +12,9 @@ import gspread
 from google.oauth2.service_account import Credentials
 from dotenv import load_dotenv
 
+# ✅ Slack 전송(웹훅) 추가
+import requests
+
 KST = timezone(timedelta(hours=9))
 LOGGER = logging.getLogger("daily_sales")
 
@@ -87,6 +90,77 @@ def write_meta_row(ws: gspread.Worksheet, row: int, spend: Optional[int], purcha
         purchases if purchases is not None else "",
     ]
     ws.update(f"J{row}:K{row}", [values], value_input_option="USER_ENTERED")
+
+
+# ---------------------------
+# ✅ Slack helpers (Webhook) (추가)
+# ---------------------------
+def _fmt_krw(n: int) -> str:
+    try:
+        return f"{int(n):,}원"
+    except Exception:
+        return f"{n}원"
+
+
+def _fmt_int(n: int) -> str:
+    try:
+        return f"{int(n):,}"
+    except Exception:
+        return str(n)
+
+
+def _safe_div(a: float, b: float) -> Optional[float]:
+    try:
+        if b == 0:
+            return None
+        return a / b
+    except Exception:
+        return None
+
+
+def send_slack_message(text: str) -> None:
+    """
+    Incoming Webhook으로 전송
+    환경변수:
+      - SLACK_WEBHOOK_URL: https://hooks.slack.com/services/...
+    """
+    webhook_url = (os.getenv("SLACK_WEBHOOK_URL") or "").strip()
+    if not webhook_url:
+        LOGGER.warning("Slack 전송 스킵: SLACK_WEBHOOK_URL 미설정")
+        return
+
+    try:
+        r = requests.post(webhook_url, json={"text": text}, timeout=15)
+        if r.status_code < 200 or r.status_code >= 300:
+            LOGGER.warning("Slack 전송 실패: status=%s body=%s", r.status_code, (r.text or "")[:500])
+        else:
+            LOGGER.info("✅ Slack 전송 완료")
+    except Exception as e:
+        LOGGER.warning("Slack 전송 예외: %s", e)
+
+
+def build_slack_summary(
+    brand_label: str,
+    date_str: str,
+    total_sales: int,
+    total_orders: int,
+    meta_spend: int,
+) -> str:
+    roas = _safe_div(total_sales, meta_spend)
+    cpa = _safe_div(meta_spend, total_orders)
+
+    roas_txt = f"{roas:.2f}x" if roas is not None else "N/A"
+    cpa_txt = _fmt_krw(int(cpa)) if cpa is not None else "N/A"
+
+    return (
+        f"📌 {brand_label} 어제 성과({date_str})\n"
+        f"(자사몰, 쿠팡, 네이버, 메타 광고비만 조회한 수치임)\n"
+        f"• 매출: {_fmt_krw(total_sales)}\n"
+        f"• 구매수: {_fmt_int(total_orders)}건\n"
+        f"• 메타 광고비: {_fmt_krw(meta_spend)}\n"
+        f"• ROAS: {roas_txt}\n"
+        f"• CPA: {cpa_txt}"
+    )
 
 
 # ---------------------------
@@ -316,6 +390,32 @@ def main():
     # 메타 광고비/구매수: J~K
     write_meta_row(ws_bz, row_bz, spend=meta_bz_spend, purchases=meta_bz_purchases)
     write_meta_row(ws_br, row_br, spend=meta_br_spend, purchases=meta_br_purchases)
+
+    # ✅ Slack 요약 전송 (추가: 시트 작성 이후)
+    bz_total_sales = cafe_bz.sales + coupang_bz.sales + naver_bz.sales
+    bz_total_orders = cafe_bz.orders + coupang_bz.orders + naver_bz.orders
+
+    br_total_sales = cafe_br.sales + coupang_br.sales
+    br_total_orders = cafe_br.orders + coupang_br.orders
+
+    send_slack_message(
+        build_slack_summary(
+            brand_label="부담제로",
+            date_str=date_str,
+            total_sales=bz_total_sales,
+            total_orders=bz_total_orders,
+            meta_spend=meta_bz_spend,
+        )
+    )
+    send_slack_message(
+        build_slack_summary(
+            brand_label="브레인올로지",
+            date_str=date_str,
+            total_sales=br_total_sales,
+            total_orders=br_total_orders,
+            meta_spend=meta_br_spend,
+        )
+    )
 
     LOGGER.info("✅ Done.")
     LOGGER.info("[부담제로] cafe24=%s coupang=%s naver=%s meta(spend=%s,purchases=%s)", cafe_bz, coupang_bz, naver_bz, meta_bz_spend, meta_bz_purchases)
